@@ -13,7 +13,7 @@ export type MbdModel = z.infer<typeof mbdModelSchema>;
 export const validateModel = (model: unknown) => mbdModelSchema.safeParse(model);
 export const createDemoModel = (): MbdModel => ({
   version: 1, settings: { gravity: [0, -9.81, 0], duration: 5, stepSize: 0.001 },
-  bodies: [{ id: "ground", name: "Ground", mass: 1, position: [0, 0, 0] }, { id: "crank", name: "Crank", mass: 1, position: [0.2, 0, 0] }],
-  joints: [{ id: "joint-1", type: "revolute", bodyA: "ground", bodyB: "crank" }],
-  forces: [{ id: "motor-1", type: "motor", targetId: "joint-1" }], outputs: [{ id: "output-1", type: "position", targetId: "crank" }]
+  bodies: [{ id: "ground", name: "Ground", mass: 1, position: [0, 0, 0] }, { id: "pendulum", name: "Pendulum", mass: 1, position: [1, 0, 0] }],
+  joints: [{ id: "pivot", type: "revolute", bodyA: "ground", bodyB: "pendulum" }],
+  forces: [{ id: "gravity", type: "gravity", targetId: "pendulum" }], outputs: [{ id: "pendulum-position", type: "position", targetId: "pendulum" }]
 });
