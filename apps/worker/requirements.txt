@@ -1,0 +1,2 @@
+# Add pychrono from the supported distribution channel during solver integration.
+pydantic==2.11.3
