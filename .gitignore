@@ -5,6 +5,23 @@ dist/
 .pnpm-store/
 .env*
 !.env.example
+
+# Credentials and secret material
+.aws/
+.secrets/
+.netrc
+.npmrc
+credentials*
+secrets*
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+
+# Local infrastructure state
+*.tfstate
+*.tfstate.*
 __pycache__/
 *.pyc
 coverage/
