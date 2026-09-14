@@ -12,7 +12,11 @@ The project owner is a motorsport engineer, not a software developer. Keep expla
 
 ## Current repository state
 
-The repository has been scaffolded as a pnpm/Turborepo monorepo.
+The repository is a pnpm/Turborepo monorepo and is connected to GitHub.
+
+- GitHub repository: `https://github.com/vanshsharma25/mbd-webapp` (public, `main` branch).
+- Local Git ignores environment files, credentials, certificates, private keys, and `.secrets/`.
+- Real Supabase credentials are local-only, permission mode `600`, and must never be committed.
 
 - `apps/web`: Next.js web application for Vercel.
 - `packages/domain`: shared MBD model types and validation.
@@ -24,10 +28,12 @@ The web application has:
 
 - A landing page.
 - A demo workspace at `/workspace/demo`.
-- A basic editor-style layout: model tree, viewport area, inspector, and results area.
-- A `Run simulation` button that currently creates a validated placeholder job response.
+- A basic editor-style layout: model tree, viewport area, inspector, and model-status area.
+- A simple pendulum demo with editable mass, simulation duration, and time step.
+- Supabase browser-client code that creates or reopens a private demo project and saves each edit as an immutable model version.
+- Anonymous Supabase sessions for the proof-of-concept. Full user sign-in belongs to Phase 7.
 
-The production build passed with `pnpm build`.
+The latest implementation passed type checking and a production build using `pnpm`.
 
 ## Architecture decision
 
@@ -73,11 +79,14 @@ The initial validation cases are a pendulum, mass-spring-damper, four-bar linkag
 
 The detailed roadmap is in `docs/backend-phases.md`.
 
-The immediate next task is Phase 0 followed by Phase 1:
+Phase 0 is complete locally. Phase 1 is implemented in the codebase but awaits two Supabase dashboard actions before live verification:
 
-1. Create and connect a free Supabase project.
-2. Add configuration values locally.
-3. Save and load engineering models from the database.
-4. Confirm a pendulum model persists correctly.
+1. Run `infra/supabase/schema.sql` in the Supabase SQL Editor.
+2. Enable **Anonymous Sign-Ins** under Authentication → Providers.
+3. Open `/workspace/demo`, edit the pendulum, save it, then reopen the page to confirm persistence.
 
-After that, build the job system and connect the local Project Chrono worker.
+The schema deliberately uses explicit grants plus Row Level Security because the Supabase project was created with automatic table exposure disabled. It also sets `projects.owner_id` from `auth.uid()` so client code never supplies an owner ID.
+
+The most recent implementation commit is `1f9848b` (`Persist demo pendulum models with Supabase`).
+
+After the pendulum persistence test passes, begin Phase 2: create simulation-job records with `waiting`, `running`, `complete`, and `failed` states, then connect the local Project Chrono worker.
